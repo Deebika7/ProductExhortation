@@ -67,25 +67,28 @@ def index():
 							if(n+1<len(i)):
 								if (not i[n+1].isdigit()):
 									f=0
-					return res
+					if(res==''):
+						return 0
+					else:
+						return res 
+					
 			return 0
 		l=[]
 		if(func('energy',new_string)!=0):
-			l.append(func('energy',new_string))
+			l.append(int(func('energy',new_string)))
 		else:
-			l.append(func('calories',new_string))
-		l.append(func('protein',new_string))
-		l.append(func('carbohydrate',new_string))
-		l.append(func('sugar',new_string))
+			l.append(int(func('calories',new_string)))
+		l.append(int(func('protein',new_string)))
+		l.append(int(func('carbohydrate',new_string)))
+		l.append(int(func('sugar',new_string)))
 		if(func('fat',new_string)!=0):
-			l.append(func('fat',new_string))
+			l.append(int(func('fat',new_string)))
 		else:
-			l.append(func('total fat',new_string))
-		l.append(func('transfat',new_string))
-		l.append(func('saturated fat',new_string))
+			l.append(int(func('total fat',new_string)))
+		l.append(int(func('transfat',new_string)))
+		l.append(int(func('saturated fat',new_string)))
         #model building
 		#loading dataset
-		import numpy as np
 		import matplotlib.pyplot as plt
 		import pandas as pd
 		dataset=pd.read_csv('C:/Users/deebi/Desktop/FinalyearProject/recommendation.csv')
@@ -129,15 +132,16 @@ def index():
 			final_estimator=LinearRegression()
 		)
 		stacking_model.fit(x_train,y_train)
-		ans=stacking_model.predict(l)
+		input=[l]
+		ans=stacking_model.predict(input)
 		round_value=np.round(ans)
 		round_value=round_value.astype(int)
 		finaloutput=label_encoder.inverse_transform(round_value)
 		# Saving image to display in html
 		img = Image.fromarray(image_arr, 'RGB')
-		img.save(os.path.join(app.config['INITIAL_FILE_UPLOADS'], finaloutput))
+		img.save(os.path.join(app.config['INITIAL_FILE_UPLOADS'], name))
 		# Returning template, filename, extracted text
-		return render_template('index.html', full_filename = full_filename, text = l)
+		return render_template('index.html', full_filename = full_filename, text = finaloutput)
 
 # Main function
 if __name__ == '__main__':
